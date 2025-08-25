@@ -1,4 +1,4 @@
-Procurement analysis and aid value estimate of FGM-148 Javelin anti-tank missiles, 10,000 of which were delivered to Ukraine by the U.S. Department of Defense.
+Procurement analysis and aid value estimate of FGM-148 Javelin anti-armor missiles, 10,000 of which were delivered to Ukraine by the U.S. Department of Defense.
 
 Uses contract information from the [U.S. DoD FY 2021 Missile Procurement Budget Estimates for the Army (page 97)](https://www.asafm.army.mil/Portals/72/Documents/BudgetMaterial/2021/Base%20Budget/Procurement/MSLS_FY_2021_PB_Missile_Procurement_Army.pdf), the [U.S. DoD FY 2025 Budget Request](https://comptroller.defense.gov/Portals/45/Documents/defbudget/FY2025/FY2025_Weapons.pdf), [USAspending.gov](https://www.usaspending.gov/search/?hash=772dd951c9f1c809e1c9e89cc6139598), and the [Federal Procurement Data System (FPDS.gov)](https://www.fpds.gov/ezsearch/fpdsportal?q=javelin+DEPARTMENT_FULL_NAME%3A%22DEPT+OF+DEFENSE%22+ULTIMATE_UEI_NAME%3A%22RAYTHEON+COMPANY%22+&s=FPDS.GOV&templateName=1.5.3&indexName=awardfull&x=21&y=10&start=90).
 
