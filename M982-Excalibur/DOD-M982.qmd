@@ -1,0 +1,180 @@
+---
+title: "DOD-M982"
+format: html
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+# contracts from usaspending.gov
+usaspending_m982 <- read_csv("Contracts_PrimeTransactions_2025-02-22_H19M41S38_1.csv")
+
+# contracts from fpds.gov
+fpds_m982 <- read_csv("M982_fpds.csv")
+fpds_m982 <- fpds_m982 |>
+  mutate(`Date Signed` = as_date(format(parse_date(`Date Signed`, format = "%b %d, %Y"), "%Y-%m-%d"), format = "%Y-%m-%d"),
+         `Action Obligation ($)` = str_replace_all(`Action Obligation ($)`, "\\$|,", "") |>
+           as.numeric())
+```
+
+```{r}
+# for use with fpds.gov data, which does not come with fiscal year column
+calculate_fiscal_year <- function(date) {
+  fiscal_year <- if_else(
+    month(date) >= 10, 
+    year(date) + 1, 
+    year(date) 
+  )
+  return(fiscal_year)
+}
+```
+
+
+```{r}
+# manually entered data from FY2013 Selected Acquisition Reports (SAR)
+# uses "End Item Recurring Flyaway TY $M" since this covers M982 production and excludes startup costs/program support
+sar_m982 <- data.frame(
+  fiscal_year = seq(2005, 2016),
+  quantity_procured = c(127, 321, 793, 400, 435, 900, 100, 744, 840, 929, 416, 472),
+  end_item_recurring_flyaway_TY_M = c(35.1, 48.3, 84.5, 47.5, 57.9, 103.2, 30.5, 56.1, 65.9, 75.8, 34.6, 44.7)
+) |>
+  mutate(unit_cost_TY_M = end_item_recurring_flyaway_TY_M / quantity_procured,
+         CPI_inflator_2024 = c(1.61, 1.56, 1.52, 1.46, 1.47, 1.44, 1.4, 1.37, 1.35, 1.33, 1.33, 1.31)
+)
+```
+
+```{r}
+# manually entered data from DACIS budget report
+dacis_m982 <- data.frame(
+  fiscal_year = seq(2017, 2024),
+  quantity_procured = c(9641 - sum(sar_m982$quantity_procured), 2841, 2208, 804, 737, 226, 236, 232),
+  end_item_recurring_flyaway_TY_M = c(927.578 - sum(sar_m982$end_item_recurring_flyaway_TY_M), 220.234, 173.891, 93.486, 86.282, 41.068, 43, 43)
+) |>
+  mutate(unit_cost_TY_M = end_item_recurring_flyaway_TY_M / quantity_procured,
+         CPI_inflator_2024 = c(1.28, 1.25, 1.23, 1.21, 1.16, 1.07, 1.03, 1)
+)
+# data for FY2017 is not listed in either report; SAR has FY2005 (production start) through FY2016, DACIS has FY2018 through FY2024 and totals for all years before FY2018 together
+# thus data for FY2017 is estimated by subtracting summed values in the SAR data from the pre-FY2018 DACIS totals
+```
+
+```{r}
+# merging this data
+pre_2019_m982 <- rbind(sar_m982, dacis_m982) |>
+  mutate(year = fiscal_year,
+         total_expenditure = end_item_recurring_flyaway_TY_M * 1000000,
+         unit_price = unit_cost_TY_M * 1000000) |>
+  select(year, total_expenditure, unit_price, quantity_procured, CPI_inflator_2024)
+pre_2019_m982
+```
+
+```{r}
+# DACIS source gives $96,211.80 for pre-2018 unit cost 
+# based on below calculation, SAR source and my 2017 estimation align with DACIS source; confirms DCIS $ amounts are also then-year values
+sum(pre_2019_m982$total_expenditure[1:14]) / sum(pre_2019_m982$quantity_procured[1:14])
+```
+
+```{r}
+# DACIS source is dated March 2019, additional procurement contracts have been issued since (not reflected in above data):
+# https://thedefensepost.com/2022/02/03/us-army-raytheon-excalibur-munition/ : early 2022, $66.2 million order for M982 Excalibur rounds
+# https://thedefensepost.com/2022/12/20/us-army-raytheon-excalibur/ : late 2022, $84 million replenishment contract for 1,000+ M982 Excalibur rounds
+
+# data from post March 2019 contracts from usaspending.gov and fpds.gov
+
+# usaspending.gov data for post-March 2019 contracts since DACIS source is dated March 2019
+post_2018_usaspending_m982 <- usaspending_m982 |> 
+  select(3, 10, 22:25, 51, 96:97, 46, 87, 95, 99, 105, 111, 117, 125, 295:297) |>
+  filter(federal_action_obligation != 0,
+         foreign_funding_description != "FOREIGN FUNDS FMS",
+         place_of_manufacture != "NOT A MANUFACTURED END PRODUCT") |>
+  arrange(desc(federal_action_obligation)) |>
+  # calculations below
+  group_by("year" = action_date_fiscal_year) |>
+  summarize("total_expenditure" = sum(federal_action_obligation)) |>
+  mutate("unit_price" = pre_2019_m982$unit_price[4:19],
+         "quantity_procured" = floor(total_expenditure / unit_price)) |>
+  filter(year >= 2019)
+
+# fpds.gov data for post-March 2019 contracts since DACIS source is dated March 2019
+post_2018_fpds_m982 <- fpds_m982 |>
+  filter(`Action Obligation ($)` != 0) |>
+  mutate(`Fiscal Year` = calculate_fiscal_year(`Date Signed`)) |>
+  arrange(`Date Signed`) |>
+  # calculations below
+  group_by("year" = `Fiscal Year`) |>
+  summarize("total_expenditure" = sum(`Action Obligation ($)`)) |>
+  mutate("unit_price" = pre_2019_m982$unit_price,
+         "quantity_procured" = floor(total_expenditure / unit_price)) |>
+  filter(year >= 2019)
+
+# fpds.gov data potentially includes non-related contracts (thus higher values) because fpds.gov filters are less precise than usaspending.gov
+post_2018_usaspending_m982
+post_2018_fpds_m982 
+```
+
+```{r}
+# numbers roughly align with SAR/DACIS merged data, except for FY2023 which is when the contracts described in the articles above likely would've gone into action
+# usaspending.gov and fpds.gov data perfectly align for FY2023 likely representing said new contracts not accounted for by the older SAR data, thus we will overwrite the 2023 row
+m982_clean <- pre_2019_m982
+m982_clean$quantity_procured[19] = 3118
+m982_clean$total_expenditure[19] = 568170438
+m982_clean
+```
+
+```{r}
+# depreciation calculations
+m982_production <- m982_clean |>
+  rename(num_m982_produced = quantity_procured) |>
+  select(1, 5, 2:4) |>
+  mutate(num_delivered_from_year = c(num_m982_produced[1:12], 7000 - sum(num_m982_produced[1:12]), rep(0, 7)),
+         unit_price_inflation_adjusted = CPI_inflator_2024 * unit_price,
+         unit_depreciated_value = pmin(unit_price_inflation_adjusted - (2022 - year) * (unit_price_inflation_adjusted / 20), unit_price_inflation_adjusted),
+         non_inflation_adjusted_depreciated_value = pmin(unit_price - (2022 - year) * (unit_price / 20), unit_price))
+
+m982_production
+```
+
+```{r}
+sum(m982_production$num_m982_produced[1:12])
+sum(m982_production$num_delivered_from_year)
+sum(m982_production$num_delivered_from_year * m982_production$unit_depreciated_value)
+sum(m982_production$num_delivered_from_year * m982_production$unit_price_inflation_adjusted)
+```
+
+```{r}
+cat("Number of units produced:",
+    formatC(
+         sum(m982_production$num_m982_produced),
+         format = "f", big.mark = ",", digits = 0
+       ),
+    "\n")
+
+cat("Number of units delivered to Ukraine:", 
+    formatC(
+         sum(m982_production$num_delivered_from_year),
+         format = "f", big.mark = ",", digits = 0
+       ), 
+    "\n")
+
+cat(paste0("Total depreciated value delivered to Ukraine (inflation adjusted): $", 
+       formatC(
+         round(sum(m982_production$num_delivered_from_year * m982_production$unit_depreciated_value)), 
+         format = "f", big.mark=",", digits = 2
+       )),
+    "\n")
+
+cat(paste0("Total original value delivered to Ukraine (inflation adjusted): $",
+       formatC(
+         round(sum(m982_production$num_delivered_from_year * m982_production$unit_price_inflation_adjusted)),
+         format = "f", big.mark = ",", digits = 2
+       )),
+    "\n")
+
+cat(paste0("Total depreciated value delivered to Ukraine (non-adjusted): $", 
+       formatC(
+         round(sum(m982_production$num_delivered_from_year * m982_production$non_inflation_adjusted_depreciated_value)), 
+         format = "f", big.mark=",", digits = 2
+       )),
+    "\n")
+```
