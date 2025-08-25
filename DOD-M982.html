@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DOD-M982</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="DOD-M982_files/libs/clipboard/clipboard.min.js"></script>
+<script src="DOD-M982_files/libs/quarto-html/quarto.js"></script>
+<script src="DOD-M982_files/libs/quarto-html/popper.min.js"></script>
+<script src="DOD-M982_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="DOD-M982_files/libs/quarto-html/anchor.min.js"></script>
+<link href="DOD-M982_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="DOD-M982_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="DOD-M982_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="DOD-M982_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="DOD-M982_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DOD-M982</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contracts from usaspending.gov</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>usaspending_m982 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Contracts_PrimeTransactions_2025-02-22_H19M41S38_1.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 306 Columns: 297
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (142): contract_transaction_unique_key, contract_award_unique_key, awar...
+dbl   (27): transaction_number, parent_award_modification_number, federal_ac...
+lgl  (121): parent_award_agency_id, parent_award_agency_name, parent_award_i...
+dttm   (1): period_of_performance_potential_end_date
+date   (6): action_date, period_of_performance_start_date, period_of_perform...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contracts from fpds.gov</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fpds_m982 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"M982_fpds.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 228 Columns: 27
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(21): Contract ID, Reference IDV, Modification Number, Award/IDV Type, A... dbl
+(5): Transaction Number, Contracting Agency ID, NAICS, Entity ZIP Code,... lgl
+(1): ...27
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...27`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fpds_m982 <span class="ot">&lt;-</span> fpds_m982 <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Date Signed</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as_date</span>(<span class="fu">format</span>(<span class="fu">parse_date</span>(<span class="st">`</span><span class="at">Date Signed</span><span class="st">`</span>, <span class="at">format =</span> <span class="st">"%b %d, %Y"</span>), <span class="st">"%Y-%m-%d"</span>), <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Action Obligation ($)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_replace_all</span>(<span class="st">`</span><span class="at">Action Obligation ($)</span><span class="st">`</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">$|,"</span>, <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.numeric</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for use with fpds.gov data, which does not come with fiscal year column</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>calculate_fiscal_year <span class="ot">&lt;-</span> <span class="cf">function</span>(date) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  fiscal_year <span class="ot">&lt;-</span> <span class="fu">if_else</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">month</span>(date) <span class="sc">&gt;=</span> <span class="dv">10</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">year</span>(date) <span class="sc">+</span> <span class="dv">1</span>, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">year</span>(date) </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(fiscal_year)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually entered data from FY2013 Selected Acquisition Reports (SAR)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># uses "End Item Recurring Flyaway TY $M" since this covers M982 production and excludes startup costs/program support</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sar_m982 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fiscal_year =</span> <span class="fu">seq</span>(<span class="dv">2005</span>, <span class="dv">2016</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantity_procured =</span> <span class="fu">c</span>(<span class="dv">127</span>, <span class="dv">321</span>, <span class="dv">793</span>, <span class="dv">400</span>, <span class="dv">435</span>, <span class="dv">900</span>, <span class="dv">100</span>, <span class="dv">744</span>, <span class="dv">840</span>, <span class="dv">929</span>, <span class="dv">416</span>, <span class="dv">472</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_item_recurring_flyaway_TY_M =</span> <span class="fu">c</span>(<span class="fl">35.1</span>, <span class="fl">48.3</span>, <span class="fl">84.5</span>, <span class="fl">47.5</span>, <span class="fl">57.9</span>, <span class="fl">103.2</span>, <span class="fl">30.5</span>, <span class="fl">56.1</span>, <span class="fl">65.9</span>, <span class="fl">75.8</span>, <span class="fl">34.6</span>, <span class="fl">44.7</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost_TY_M =</span> end_item_recurring_flyaway_TY_M <span class="sc">/</span> quantity_procured,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">CPI_inflator_2024 =</span> <span class="fu">c</span>(<span class="fl">1.61</span>, <span class="fl">1.56</span>, <span class="fl">1.52</span>, <span class="fl">1.46</span>, <span class="fl">1.47</span>, <span class="fl">1.44</span>, <span class="fl">1.4</span>, <span class="fl">1.37</span>, <span class="fl">1.35</span>, <span class="fl">1.33</span>, <span class="fl">1.33</span>, <span class="fl">1.31</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually entered data from DACIS budget report</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dacis_m982 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fiscal_year =</span> <span class="fu">seq</span>(<span class="dv">2017</span>, <span class="dv">2024</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantity_procured =</span> <span class="fu">c</span>(<span class="dv">9641</span> <span class="sc">-</span> <span class="fu">sum</span>(sar_m982<span class="sc">$</span>quantity_procured), <span class="dv">2841</span>, <span class="dv">2208</span>, <span class="dv">804</span>, <span class="dv">737</span>, <span class="dv">226</span>, <span class="dv">236</span>, <span class="dv">232</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_item_recurring_flyaway_TY_M =</span> <span class="fu">c</span>(<span class="fl">927.578</span> <span class="sc">-</span> <span class="fu">sum</span>(sar_m982<span class="sc">$</span>end_item_recurring_flyaway_TY_M), <span class="fl">220.234</span>, <span class="fl">173.891</span>, <span class="fl">93.486</span>, <span class="fl">86.282</span>, <span class="fl">41.068</span>, <span class="dv">43</span>, <span class="dv">43</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit_cost_TY_M =</span> end_item_recurring_flyaway_TY_M <span class="sc">/</span> quantity_procured,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">CPI_inflator_2024 =</span> <span class="fu">c</span>(<span class="fl">1.28</span>, <span class="fl">1.25</span>, <span class="fl">1.23</span>, <span class="fl">1.21</span>, <span class="fl">1.16</span>, <span class="fl">1.07</span>, <span class="fl">1.03</span>, <span class="dv">1</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># data for FY2017 is not listed in either report; SAR has FY2005 (production start) through FY2016, DACIS has FY2018 through FY2024 and totals for all years before FY2018 together</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># thus data for FY2017 is estimated by subtracting summed values in the SAR data from the pre-FY2018 DACIS totals</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merging this data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pre_2019_m982 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(sar_m982, dacis_m982) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> fiscal_year,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">total_expenditure =</span> end_item_recurring_flyaway_TY_M <span class="sc">*</span> <span class="dv">1000000</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">unit_price =</span> unit_cost_TY_M <span class="sc">*</span> <span class="dv">1000000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, total_expenditure, unit_price, quantity_procured, CPI_inflator_2024)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pre_2019_m982</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   year total_expenditure unit_price quantity_procured CPI_inflator_2024
+1  2005          35100000  276377.95               127              1.61
+2  2006          48300000  150467.29               321              1.56
+3  2007          84500000  106557.38               793              1.52
+4  2008          47500000  118750.00               400              1.46
+5  2009          57900000  133103.45               435              1.47
+6  2010         103200000  114666.67               900              1.44
+7  2011          30500000  305000.00               100              1.40
+8  2012          56100000   75403.23               744              1.37
+9  2013          65900000   78452.38               840              1.35
+10 2014          75800000   81593.11               929              1.33
+11 2015          34600000   83173.08               416              1.33
+12 2016          44700000   94703.39               472              1.31
+13 2017         243478000   76952.59              3164              1.28
+14 2018         220234000   77519.89              2841              1.25
+15 2019         173891000   78754.98              2208              1.23
+16 2020          93486000  116276.12               804              1.21
+17 2021          86282000  117071.91               737              1.16
+18 2022          41068000  181716.81               226              1.07
+19 2023          43000000  182203.39               236              1.03
+20 2024          43000000  185344.83               232              1.00</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DACIS source gives $96,211.80 for pre-2018 unit cost </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># based on below calculation, SAR source and my 2017 estimation align with DACIS source; confirms DCIS $ amounts are also then-year values</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pre_2019_m982<span class="sc">$</span>total_expenditure[<span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>]) <span class="sc">/</span> <span class="fu">sum</span>(pre_2019_m982<span class="sc">$</span>quantity_procured[<span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 91957.38</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DACIS source is dated March 2019, additional procurement contracts have been issued since (not reflected in above data):</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://thedefensepost.com/2022/02/03/us-army-raytheon-excalibur-munition/ : early 2022, $66.2 million order for M982 Excalibur rounds</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://thedefensepost.com/2022/12/20/us-army-raytheon-excalibur/ : late 2022, $84 million replenishment contract for 1,000+ M982 Excalibur rounds</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># data from post March 2019 contracts from usaspending.gov and fpds.gov</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># usaspending.gov data for post-March 2019 contracts since DACIS source is dated March 2019</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>post_2018_usaspending_m982 <span class="ot">&lt;-</span> usaspending_m982 <span class="sc">|&gt;</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">22</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">51</span>, <span class="dv">96</span><span class="sc">:</span><span class="dv">97</span>, <span class="dv">46</span>, <span class="dv">87</span>, <span class="dv">95</span>, <span class="dv">99</span>, <span class="dv">105</span>, <span class="dv">111</span>, <span class="dv">117</span>, <span class="dv">125</span>, <span class="dv">295</span><span class="sc">:</span><span class="dv">297</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(federal_action_obligation <span class="sc">!=</span> <span class="dv">0</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>         foreign_funding_description <span class="sc">!=</span> <span class="st">"FOREIGN FUNDS FMS"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>         place_of_manufacture <span class="sc">!=</span> <span class="st">"NOT A MANUFACTURED END PRODUCT"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(federal_action_obligation)) <span class="sc">|&gt;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculations below</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">"year"</span> <span class="ot">=</span> action_date_fiscal_year) <span class="sc">|&gt;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"total_expenditure"</span> <span class="ot">=</span> <span class="fu">sum</span>(federal_action_obligation)) <span class="sc">|&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">"unit_price"</span> <span class="ot">=</span> pre_2019_m982<span class="sc">$</span>unit_price[<span class="dv">4</span><span class="sc">:</span><span class="dv">19</span>],</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">"quantity_procured"</span> <span class="ot">=</span> <span class="fu">floor</span>(total_expenditure <span class="sc">/</span> unit_price)) <span class="sc">|&gt;</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2019</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># fpds.gov data for post-March 2019 contracts since DACIS source is dated March 2019</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>post_2018_fpds_m982 <span class="ot">&lt;-</span> fpds_m982 <span class="sc">|&gt;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Action Obligation ($)</span><span class="st">`</span> <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Fiscal Year</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">calculate_fiscal_year</span>(<span class="st">`</span><span class="at">Date Signed</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="st">`</span><span class="at">Date Signed</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculations below</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">"year"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Fiscal Year</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"total_expenditure"</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">Action Obligation ($)</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">"unit_price"</span> <span class="ot">=</span> pre_2019_m982<span class="sc">$</span>unit_price,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>         <span class="st">"quantity_procured"</span> <span class="ot">=</span> <span class="fu">floor</span>(total_expenditure <span class="sc">/</span> unit_price)) <span class="sc">|&gt;</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2019</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="co"># fpds.gov data potentially includes non-related contracts (thus higher values) because fpds.gov filters are less precise than usaspending.gov</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>post_2018_usaspending_m982</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   year total_expenditure unit_price quantity_procured
+  &lt;dbl&gt;             &lt;dbl&gt;      &lt;dbl&gt;             &lt;dbl&gt;
+1  2019        200234186.     78755.              2542
+2  2020         95511150.    116276.               821
+3  2021         84996062.    117072.               726
+4  2022         66221560.    181717.               364
+5  2023        568170438.    182203.              3118</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>post_2018_fpds_m982 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+   year total_expenditure unit_price quantity_procured
+  &lt;dbl&gt;             &lt;dbl&gt;      &lt;dbl&gt;             &lt;dbl&gt;
+1  2019        200234192.     78755.              2542
+2  2020        100011284.    116276.               860
+3  2021        117876055.    117072.              1006
+4  2022         75778750.    181717.               417
+5  2023        568170438.    182203.              3118
+6  2024         10648417     185345.                57</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numbers roughly align with SAR/DACIS merged data, except for FY2023 which is when the contracts described in the articles above likely would've gone into action</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># usaspending.gov and fpds.gov data perfectly align for FY2023 likely representing said new contracts not accounted for by the older SAR data, thus we will overwrite the 2023 row</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>m982_clean <span class="ot">&lt;-</span> pre_2019_m982</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>m982_clean<span class="sc">$</span>quantity_procured[<span class="dv">19</span>] <span class="ot">=</span> <span class="dv">3118</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>m982_clean<span class="sc">$</span>total_expenditure[<span class="dv">19</span>] <span class="ot">=</span> <span class="dv">568170438</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>m982_clean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   year total_expenditure unit_price quantity_procured CPI_inflator_2024
+1  2005          35100000  276377.95               127              1.61
+2  2006          48300000  150467.29               321              1.56
+3  2007          84500000  106557.38               793              1.52
+4  2008          47500000  118750.00               400              1.46
+5  2009          57900000  133103.45               435              1.47
+6  2010         103200000  114666.67               900              1.44
+7  2011          30500000  305000.00               100              1.40
+8  2012          56100000   75403.23               744              1.37
+9  2013          65900000   78452.38               840              1.35
+10 2014          75800000   81593.11               929              1.33
+11 2015          34600000   83173.08               416              1.33
+12 2016          44700000   94703.39               472              1.31
+13 2017         243478000   76952.59              3164              1.28
+14 2018         220234000   77519.89              2841              1.25
+15 2019         173891000   78754.98              2208              1.23
+16 2020          93486000  116276.12               804              1.21
+17 2021          86282000  117071.91               737              1.16
+18 2022          41068000  181716.81               226              1.07
+19 2023         568170438  182203.39              3118              1.03
+20 2024          43000000  185344.83               232              1.00</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># depreciation calculations</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>m982_production <span class="ot">&lt;-</span> m982_clean <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">num_m982_produced =</span> quantity_procured) <span class="sc">|&gt;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">num_delivered_from_year =</span> <span class="fu">c</span>(num_m982_produced[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>], <span class="dv">7000</span> <span class="sc">-</span> <span class="fu">sum</span>(num_m982_produced[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">7</span>)),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">unit_price_inflation_adjusted =</span> CPI_inflator_2024 <span class="sc">*</span> unit_price,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">unit_depreciated_value =</span> <span class="fu">pmin</span>(unit_price_inflation_adjusted <span class="sc">-</span> (<span class="dv">2022</span> <span class="sc">-</span> year) <span class="sc">*</span> (unit_price_inflation_adjusted <span class="sc">/</span> <span class="dv">20</span>), unit_price_inflation_adjusted),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">non_inflation_adjusted_depreciated_value =</span> <span class="fu">pmin</span>(unit_price <span class="sc">-</span> (<span class="dv">2022</span> <span class="sc">-</span> year) <span class="sc">*</span> (unit_price <span class="sc">/</span> <span class="dv">20</span>), unit_price))</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>m982_production</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   year CPI_inflator_2024 total_expenditure unit_price num_m982_produced
+1  2005              1.61          35100000  276377.95               127
+2  2006              1.56          48300000  150467.29               321
+3  2007              1.52          84500000  106557.38               793
+4  2008              1.46          47500000  118750.00               400
+5  2009              1.47          57900000  133103.45               435
+6  2010              1.44         103200000  114666.67               900
+7  2011              1.40          30500000  305000.00               100
+8  2012              1.37          56100000   75403.23               744
+9  2013              1.35          65900000   78452.38               840
+10 2014              1.33          75800000   81593.11               929
+11 2015              1.33          34600000   83173.08               416
+12 2016              1.31          44700000   94703.39               472
+13 2017              1.28         243478000   76952.59              3164
+14 2018              1.25         220234000   77519.89              2841
+15 2019              1.23         173891000   78754.98              2208
+16 2020              1.21          93486000  116276.12               804
+17 2021              1.16          86282000  117071.91               737
+18 2022              1.07          41068000  181716.81               226
+19 2023              1.03         568170438  182203.39              3118
+20 2024              1.00          43000000  185344.83               232
+   num_delivered_from_year unit_price_inflation_adjusted unit_depreciated_value
+1                      127                     444968.50               66745.28
+2                      321                     234728.97               46945.79
+3                      793                     161967.21               40491.80
+4                      400                     173375.00               52012.50
+5                      435                     195662.07               68481.72
+6                      900                     165120.00               66048.00
+7                      100                     427000.00              192150.00
+8                      744                     103302.42               51651.21
+9                      840                     105910.71               58250.89
+10                     929                     108518.84               65111.30
+11                     416                     110620.19               71903.13
+12                     472                     124061.44               86843.01
+13                     523                      98499.32               73874.49
+14                       0                      96899.86               77519.89
+15                       0                      96868.63               82338.33
+16                       0                     140694.10              126624.69
+17                       0                     135803.42              129013.25
+18                       0                     194436.99              194436.99
+19                       0                     187669.49              187669.49
+20                       0                     185344.83              185344.83
+   non_inflation_adjusted_depreciated_value
+1                                  41456.69
+2                                  30093.46
+3                                  26639.34
+4                                  35625.00
+5                                  46586.21
+6                                  45866.67
+7                                 137250.00
+8                                  37701.61
+9                                  43148.81
+10                                 48955.87
+11                                 54062.50
+12                                 66292.37
+13                                 57714.44
+14                                 62015.91
+15                                 66941.73
+16                                104648.51
+17                                111218.32
+18                                181716.81
+19                                182203.39
+20                                185344.83</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(m982_production<span class="sc">$</span>num_m982_produced[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6477</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year <span class="sc">*</span> m982_production<span class="sc">$</span>unit_depreciated_value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 442294607</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year <span class="sc">*</span> m982_production<span class="sc">$</span>unit_price_inflation_adjusted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1028796143</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Number of units produced:"</span>,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">formatC</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">sum</span>(m982_production<span class="sc">$</span>num_m982_produced),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">big.mark =</span> <span class="st">","</span>, <span class="at">digits =</span> <span class="dv">0</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>       ),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of units produced: 19,807 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Number of units delivered to Ukraine:"</span>, </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">formatC</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">big.mark =</span> <span class="st">","</span>, <span class="at">digits =</span> <span class="dv">0</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>       ), </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of units delivered to Ukraine: 7,000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Total depreciated value delivered to Ukraine (inflation adjusted): $"</span>, </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">formatC</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">round</span>(<span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year <span class="sc">*</span> m982_production<span class="sc">$</span>unit_depreciated_value)), </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">big.mark=</span><span class="st">","</span>, <span class="at">digits =</span> <span class="dv">2</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>       )),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total depreciated value delivered to Ukraine (inflation adjusted): $442,294,607.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Total original value delivered to Ukraine (inflation adjusted): $"</span>,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">formatC</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">round</span>(<span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year <span class="sc">*</span> m982_production<span class="sc">$</span>unit_price_inflation_adjusted)),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">big.mark =</span> <span class="st">","</span>, <span class="at">digits =</span> <span class="dv">2</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>       )),</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total original value delivered to Ukraine (inflation adjusted): $1,028,796,143.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Total depreciated value delivered to Ukraine (non-adjusted): $"</span>, </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">formatC</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">round</span>(<span class="fu">sum</span>(m982_production<span class="sc">$</span>num_delivered_from_year <span class="sc">*</span> m982_production<span class="sc">$</span>non_inflation_adjusted_depreciated_value)), </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">big.mark=</span><span class="st">","</span>, <span class="at">digits =</span> <span class="dv">2</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>       )),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total depreciated value delivered to Ukraine (non-adjusted): $319,309,654.00 </code></pre>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
